@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captación de Clientes - Elemental Club</title>
+    <title>Elemental Club - Sistema de Captación</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #FF7B00;
@@ -38,7 +40,7 @@
         
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
             background: var(--darker);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -267,134 +269,349 @@
             border-top: 1px solid var(--border);
             background: var(--gray);
         }
+        
+        /* Login Styles */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--darker);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            padding: 30px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .btn-login {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        
+        .btn-login:hover {
+            background: #E66A00;
+            transform: translateY(-2px);
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-logout {
+            background: transparent;
+            color: #AAA;
+            border: 1px solid var(--border);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255, 123, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        /* Stats Styles */
+        .stats-container {
+            padding: 20px;
+            margin-top: 20px;
+            background: var(--gray);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .stats-title {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-card {
+            background: var(--darker);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .stat-label {
+            text-align: center;
+            color: #AAA;
+            font-size: 0.9rem;
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: #AAA;
+            border: none;
+            padding: 10px 20px;
+        }
+        
+        .nav-link.active {
+            color: var(--primary);
+            background: transparent;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .tab-content {
+            padding: 0 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <div class="logo-text">ELEMENT<span>AL</span></div>
-                <div class="logo-subtext">CLUB</div>
-            </div>
-            <h1>Captación de Clientes</h1>
-            <p>Exclusivo recepcionistas</p>
+    <div id="loginPage" class="login-container">
+        <div class="login-logo">
+            <div class="logo-text">ELEMENT<span>AL</span></div>
+            <div class="logo-subtext">CLUB</div>
+            <h2 style="margin-top: 20px; color: var(--primary);">Acceso Empleados</h2>
         </div>
         
-        <div class="form-container">
-            <form id="clientForm">
-                <div class="form-section">
-                    <h3 class="section-title"><i class="fas fa-user"></i> Información Personal</h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="firstName" class="form-label required">Nombre(s)</label>
-                            <input type="text" class="form-control" id="firstName" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="lastName1" class="form-label required">Apellido Paterno</label>
-                            <input type="text" class="form-control" id="lastName1" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="lastName2" class="form-label">Apellido Materno</label>
-                            <input type="text" class="form-control" id="lastName2">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone" class="form-label required">Teléfono</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+52 XXX XXX XXXX" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="gender" class="form-label required">Género</label>
-                            <select class="form-select" id="gender" required>
-                                <option value="" selected disabled>Selecciona una opción</option>
-                                <option value="Hombre">Hombre</option>
-                                <option value="Mujer">Mujer</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="source" class="form-label required">¿Dónde nos conoció?</label>
-                            <select class="form-select" id="source" required>
-                                <option value="" selected disabled>Selecciona una opción</option>
-                                <option value="Pasa por aquí">Pasa por aquí</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Recomendación">Recomendación</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <h3 class="section-title"><i class="fas fa-sticky-note"></i> Observaciones</h3>
-                    <div class="form-group">
-                        <label for="observations" class="form-label">Notas adicionales</label>
-                        <textarea class="form-control" id="observations" placeholder="Agregar cualquier observación relevante sobre el cliente potencial"></textarea>
-                    </div>
-                </div>
-                
-                <div class="whatsapp-preview" id="whatsappPreview">
-                    <div class="preview-title">Vista previa del mensaje de WhatsApp:</div>
-                    <div class="message-bubble" id="welcomeMessage">
-                        ¡Hola <span id="previewName"></span>! 👋 Te doy la bienvenida a Elemental Club 🏋️
-                    </div>
-                    <div id="welcomeImagePreview" class="image-preview">
-                        <img src="https://i.imgur.com/BaZNi7V.jpg" class="img-fluid" alt="Bienvenida Elemental Club">
-                    </div>
-                    <div class="message-bubble">
-                        Me da mucho gusto que te intereses en formar parte de nuestra comunidad fitness 💪 Te comparto toda la información sobre nuestros planes y clases:
-                    </div>
-                    <div id="costImagePreview1" class="image-preview">
-                        <img src="https://i.imgur.com/xfcw3Dd.jpg" class="img-fluid" alt="Costos 1 Elemental Club">
-                    </div>
-                    <div id="costImagePreview2" class="image-preview">
-                        <img src="https://i.imgur.com/q4gDeas.jpg" class="img-fluid" alt="Costos 2 Elemental Club">
-                    </div>
-                    <div id="costImagePreview3" class="image-preview">
-                        <img src="https://i.imgur.com/gH7mzqm.jpg" class="img-fluid" alt="Costos 3 Elemental Club">
-                    </div>
-                    <div class="message-bubble">
-                        Horarios GYM 
-
-                        🏋️ GYM
-                        📅 Lunes a Viernes → ⏰ 5:00 AM - 11:00 PM
-                        📅 Sábados y Domingos → ⏰ 7:00 AM - 5:00 PM
-
-                        🛎️ Recepción
-                        📅 Lunes a Viernes → ⏰ 6:00 AM - 8:30 PM
-                        📅 Sábados y Domingos → ⏰ 8:00 AM - 1:00 PM
-                    </div>
-                    <div class="message-bubble">
-                        ¡Estoy aquí para resolver cualquier duda que tengas! 🔥 ¿Cuándo te gustaría empezar tu transformación?
-                    </div>
-                    <div id="finalImagePreview" class="image-preview">
-                        <img src="https://i.imgur.com/Tu42NCT.jpg" class="img-fluid" alt="Mensaje Final Elemental Club">
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-whatsapp">
-                    <i class="fab fa-whatsapp"></i> Enviar WhatsApp
-                </button>
-            </form>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
             
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3>¡Información enviada con éxito!</h3>
-                <p>Los datos del cliente se han guardado y el mensaje se ha enviado por WhatsApp.</p>
-                <button class="btn-new-client" onclick="resetForm()">
-                    Agregar nuevo cliente
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" required value="elemental00">
+            </div>
+            
+            <div id="loginError" class="error-message">
+                Credenciales incorrectas. Intenta nuevamente.
+            </div>
+            
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </button>
+        </form>
+    </div>
+    
+    <div id="appContainer" class="container" style="display: none;">
+        <div class="user-info">
+            <span id="userName"></span>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
+        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="captacion-tab" data-bs-toggle="tab" data-bs-target="#captacion" type="button" role="tab" aria-controls="captacion" aria-selected="true">
+                    <i class="fas fa-user-plus"></i> Captación
                 </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="estadisticas-tab" data-bs-toggle="tab" data-bs-target="#estadisticas" type="button" role="tab" aria-controls="estadisticas" aria-selected="false">
+                    <i class="fas fa-chart-bar"></i> Estadísticas
+                </button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="captacion" role="tabpanel" aria-labelledby="captacion-tab">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">ELEMENT<span>AL</span></div>
+                        <div class="logo-subtext">CLUB</div>
+                    </div>
+                    <h1>Captación de Clientes</h1>
+                    <p>Exclusivo recepcionistas</p>
+                </div>
+                
+                <div class="form-container">
+                    <form id="clientForm">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-user"></i> Información Personal</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label required">Nombre(s)</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="lastName1" class="form-label required">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="lastName1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="lastName2" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="lastName2">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone" class="form-label required">Teléfono</label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="+52 XXX XXX XXXX" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="gender" class="form-label required">Género</label>
+                                    <select class="form-select" id="gender" required>
+                                        <option value="" selected disabled>Selecciona una opción</option>
+                                        <option value="Hombre">Hombre</option>
+                                        <option value="Mujer">Mujer</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="source" class="form-label required">¿Dónde nos conoció?</label>
+                                    <select class="form-select" id="source" required>
+                                        <option value="" selected disabled>Selecciona una opción</option>
+                                        <option value="Pasa por aquí">Pasa por aquí</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Recomendación">Recomendación</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-sticky-note"></i> Observaciones</h3>
+                            <div class="form-group">
+                                <label for="observations" class="form-label">Notas adicionales</label>
+                                <textarea class="form-control" id="observations" placeholder="Agregar cualquier observación relevante sobre el cliente potencial"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="whatsapp-preview" id="whatsappPreview">
+                            <div class="preview-title">Vista previa del mensaje de WhatsApp:</div>
+                            <div class="message-bubble" id="welcomeMessage">
+                                ¡Hola <span id="previewName"></span>! 👋 Te doy la bienvenida a Elemental Club 🏋️
+                            </div>
+                            <div id="welcomeImagePreview" class="image-preview">
+                                <img src="https://i.imgur.com/BaZNi7V.jpg" class="img-fluid" alt="Bienvenida Elemental Club">
+                            </div>
+                            <div class="message-bubble">
+                                Me da mucho gusto que te intereses en formar parte de nuestra comunidad fitness 💪 Te comparto toda la información sobre nuestros planes y clases:
+                            </div>
+                            <div id="costImagePreview1" class="image-preview">
+                                <img src="https://i.imgur.com/xfcw3Dd.jpg" class="img-fluid" alt="Costos 1 Elemental Club">
+                            </div>
+                            <div id="costImagePreview2" class="image-preview">
+                                <img src="https://i.imgur.com/q4gDeas.jpg" class="img-fluid" alt="Costos 2 Elemental Club">
+                            </div>
+                            <div id="costImagePreview3" class="image-preview">
+                                <img src="https://i.imgur.com/gH7mzqm.jpg" class="img-fluid" alt="Costos 3 Elemental Club">
+                            </div>
+                            <div class="message-bubble">
+                                ¡Estoy aquí para resolver cualquier duda que tengas! 🔥 ¿Cuándo te gustaría empezar tu transformación?
+                            </div>
+                            <div id="finalImagePreview" class="image-preview">
+                                <img src="https://i.imgur.com/Tu42NCT.jpg" class="img-fluid" alt="Mensaje Final Elemental Club">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-whatsapp">
+                            <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+                        </button>
+                    </form>
+                    
+                    <div class="success-message" id="successMessage">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>¡Información enviada con éxito!</h3>
+                        <p>Los datos del cliente se han guardado y el mensaje se ha enviado por WhatsApp.</p>
+                        <button class="btn-new-client" onclick="resetForm()">
+                            Agregar nuevo cliente
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">ELEMENT<span>AL</span></div>
+                        <div class="logo-subtext">CLUB</div>
+                    </div>
+                    <h1>Estadísticas de Captación</h1>
+                    <p>Rendimiento por empleado</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="stats-container">
+                        <h3 class="stats-title">Resumen General</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalClients">0</div>
+                                <div class="stat-label">Total de clientes captados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="myClients">0</div>
+                                <div class="stat-label">Tus clientes captados</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <h3 class="stats-title">Rendimiento por Empleado</h3>
+                        <canvas id="employeeChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <h3 class="stats-title">Últimos clientes captados</h3>
+                        <div id="recentClients" class="list-group">
+                            <!-- Los clientes recientes se cargarán aquí -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -404,8 +621,241 @@
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Mostrar vista previa cuando se complete la información requerida
+        // Configuración de Supabase (REMPLAZA CON TUS PROPIAS CREDENCIALES)
+        const SUPABASE_URL = 'https://aveonbmcbopqqcambxoi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2ZW9uYm1jYm9wcXFjYW1ieG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0MzksImV4cCI6MjA3MzAxNDQzOX0.wKhEMF4K6Zv6PuobxCwubmhNTyzk6qlmjKyGO7JqH9Y';
+        
+        // Inicializar Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Variables globales
+        let currentEmployee = null;
+        let employeeChart = null;
+        
+        // Verificar si el usuario ya ha iniciado sesión
+        function checkAuth() {
+            const savedEmployee = localStorage.getItem('currentEmployee');
+            if (savedEmployee) {
+                currentEmployee = JSON.parse(savedEmployee);
+                showApp();
+            } else {
+                showLogin();
+            }
+        }
+        
+        // Mostrar la aplicación
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('userName').textContent = `${currentEmployee.name} ${currentEmployee.last_name}`;
+            
+            // Cargar estadísticas
+            loadStatistics();
+        }
+        
+        // Mostrar formulario de login
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('appContainer').style.display = 'none';
+        }
+        
+        // Manejar el inicio de sesión
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            
+            try {
+                // Buscar empleado en la base de datos
+                const { data: employees, error } = await supabase
+                    .from('employees')
+                    .select('*')
+                    .eq('username', username)
+                    .eq('password', password);
+                
+                if (error) {
+                    errorElement.textContent = 'Error de conexión. Intenta nuevamente.';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+                
+                if (employees.length === 0) {
+                    errorElement.textContent = 'Usuario o contraseña incorrectos.';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+                
+                // Login exitoso
+                errorElement.style.display = 'none';
+                currentEmployee = employees[0];
+                
+                // Guardar en localStorage
+                localStorage.setItem('currentEmployee', JSON.stringify(currentEmployee));
+                
+                showApp();
+            } catch (error) {
+                errorElement.textContent = 'Error al iniciar sesión. Intenta nuevamente.';
+                errorElement.style.display = 'block';
+            }
+        });
+        
+        // Cerrar sesión
+        function logout() {
+            localStorage.removeItem('currentEmployee');
+            currentEmployee = null;
+            showLogin();
+        }
+        
+        // Cargar estadísticas
+        async function loadStatistics() {
+            if (!currentEmployee) return;
+            
+            try {
+                // Obtener todos los clientes captados
+                const { data: clients, error } = await supabase
+                    .from('clientes')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error al cargar clientes:', error);
+                    return;
+                }
+                
+                // Actualizar contadores
+                document.getElementById('totalClients').textContent = clients ? clients.length : 0;
+                
+                // Contar clientes del empleado actual
+                const myClients = clients ? clients.filter(client => client.empleado_id === currentEmployee.id) : [];
+                document.getElementById('myClients').textContent = myClients.length;
+                
+                // Calcular estadísticas por empleado
+                const employeeStats = {};
+                if (clients) {
+                    clients.forEach(client => {
+                        if (!employeeStats[client.empleado_name]) {
+                            employeeStats[client.empleado_name] = 0;
+                        }
+                        employeeStats[client.empleado_name]++;
+                    });
+                }
+                
+                // Crear gráfica
+                createEmployeeChart(employeeStats);
+                
+                // Mostrar clientes recientes
+                showRecentClients(clients ? clients.slice(0, 5) : []);
+                
+            } catch (error) {
+                console.error('Error al cargar estadísticas:', error);
+            }
+        }
+        
+        // Crear gráfica de empleados
+        function createEmployeeChart(employeeStats) {
+            const ctx = document.getElementById('employeeChart').getContext('2d');
+            
+            // Destruir gráfica anterior si existe
+            if (employeeChart) {
+                employeeChart.destroy();
+            }
+            
+            const employees = Object.keys(employeeStats);
+            const counts = Object.values(employeeStats);
+            
+            // Colores para la gráfica
+            const backgroundColors = employees.map((name, index) => {
+                return name === currentEmployee.name ? '#FF7B00' : `hsl(${index * 40}, 70%, 50%)`;
+            });
+            
+            employeeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: employees,
+                    datasets: [{
+                        label: 'Clientes captados',
+                        data: counts,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Clientes: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#E0E0E0'
+                            },
+                            grid: {
+                                color: '#383838'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#E0E0E0',
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: {
+                                color: '#383838'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Mostrar clientes recientes
+        function showRecentClients(clients) {
+            const container = document.getElementById('recentClients');
+            container.innerHTML = '';
+            
+            if (clients.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-3">No hay clientes captados aún</div>';
+                return;
+            }
+            
+            clients.forEach(client => {
+                const date = new Date(client.created_at);
+                const formattedDate = date.toLocaleDateString('es-MX');
+                
+                const clientEl = document.createElement('div');
+                clientEl.className = 'list-group-item list-group-item-action bg-gray border-border';
+                clientEl.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${client.first_name} ${client.last_name1} ${client.last_name2 || ''}</h6>
+                        <small class="text-muted">${formattedDate}</small>
+                    </div>
+                    <p class="mb-1">Tel: ${client.phone} | Captado por: ${client.empleado_name}</p>
+                    <small class="text-muted">${client.source}</small>
+                `;
+                
+                container.appendChild(clientEl);
+            });
+        }
+        
+        // Verificar autenticación al cargar la página
+        checkAuth();
+
+        // Tu código original para el formulario de captación (con modificaciones para guardar empleado)
         const formFields = document.querySelectorAll('#clientForm input, #clientForm select');
         formFields.forEach(field => {
             field.addEventListener('input', checkFormCompletion);
@@ -434,43 +884,64 @@
         }
         
         // Manejar el envío del formulario
-        document.getElementById('clientForm').addEventListener('submit', function(e) {
+        document.getElementById('clientForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            if (!currentEmployee) {
+                alert('Debes iniciar sesión para enviar el formulario');
+                return;
+            }
             
             // Obtener valores del formulario
             const clientData = {
-                firstName: document.getElementById('firstName').value,
-                lastName1: document.getElementById('lastName1').value,
-                lastName2: document.getElementById('lastName2').value,
+                first_name: document.getElementById('firstName').value,
+                last_name1: document.getElementById('lastName1').value,
+                last_name2: document.getElementById('lastName2').value,
                 phone: document.getElementById('phone').value,
                 gender: document.getElementById('gender').value,
                 source: document.getElementById('source').value,
                 observations: document.getElementById('observations').value,
-                timestamp: new Date().toISOString()
+                empleado_id: currentEmployee.id,
+                empleado_name: `${currentEmployee.name} ${currentEmployee.last_name}`,
+                created_at: new Date().toISOString()
             };
             
-            // Aquí iría el código para guardar en Supabase
-            console.log('Datos a guardar en Supabase:', clientData);
-            
-            // Simular guardado en base de datos
-            setTimeout(function() {
+            try {
+                // Guardar en Supabase
+                const { data, error } = await supabase
+                    .from('clientes')
+                    .insert([clientData]);
+                
+                if (error) {
+                    console.error('Error al guardar cliente:', error);
+                    alert('Error al guardar los datos. Intenta nuevamente.');
+                    return;
+                }
+                
                 // Preparar mensaje para WhatsApp
                 const phoneNumber = clientData.phone.replace(/\D/g, '');
-                const welcomeMessage = `¡Hola ${clientData.firstName}! 👋 Te doy la bienvenida a Elemental Club 🏋️`;
+                const welcomeMessage = `¡Hola ${clientData.first_name}! 👋 Te doy la bienvenida a Elemental Club 🏋️`;
                 
                 // Codificar los mensajes para URL
                 const encodedWelcomeMessage = encodeURIComponent(welcomeMessage);
                 
-                // Crear enlace de WhatsApp (simulación)
+                // Crear enlace de WhatsApp
                 const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodedWelcomeMessage}`;
                 
-                // Aquí iría el código real para enviar por WhatsApp
-                console.log('Enlace de WhatsApp:', whatsappLink);
+                // Abrir WhatsApp
+                window.open(whatsappLink, '_blank');
                 
                 // Mostrar mensaje de éxito
                 document.getElementById('successMessage').style.display = 'block';
                 document.getElementById('clientForm').style.display = 'none';
-            }, 1000);
+                
+                // Recargar estadísticas
+                await loadStatistics();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar la solicitud. Intenta nuevamente.');
+            }
         });
         
         // Función para resetear el formulario
@@ -481,7 +952,7 @@
             document.getElementById('clientForm').style.display = 'block';
         }
         
-         // Validación del número de teléfono
+        // Validación del número de teléfono
         document.getElementById('phone').addEventListener('input', function(e) {
             // Permitir sólo números y el signo +
             e.target.value = e.target.value.replace(/[^0-9+]/g, '');
@@ -506,7 +977,7 @@
             
             e.target.value = value;
         });
-
+        
         // Formatear nombre con primera letra mayúscula
         document.getElementById('firstName').addEventListener('blur', function(e) {
             if (e.target.value) {
