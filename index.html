@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elemental Club - Sistema de Captación</title>
+    <title>Elemental Club - Sistema de Gestión</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -17,7 +17,7 @@
             --light: #f8f9fa;
             --gray: #1E1E1E;
             --border: #383838;
-            --text: #E0E0E0;
+            --text: #E0E0E0; 
         }
         
         * {
@@ -40,7 +40,7 @@
         
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             background: var(--darker);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -405,69 +405,132 @@
             padding: 0 10px;
         }
         
-        /* Member Card Styles */
-        .member-card {
+        /* Member Styles */
+        .member-info {
             background: var(--gray);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             border: 1px solid var(--border);
-        }
-        
-        .member-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            display: none;
         }
         
         .member-field {
+            display: flex;
             margin-bottom: 10px;
         }
         
-        .member-field strong {
+        .member-label {
+            font-weight: 600;
+            min-width: 180px;
             color: var(--primary);
-            display: block;
-            margin-bottom: 5px;
+        }
+        
+        .member-value {
+            flex: 1;
         }
         
         .status-badge {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
         .status-active {
-            background-color: rgba(37, 211, 102, 0.2);
-            color: #25D366;
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
         }
         
         .status-inactive {
-            background-color: rgba(255, 107, 107, 0.2);
-            color: #ff6b6b;
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
         }
         
         .status-pending {
             background-color: rgba(255, 193, 7, 0.2);
-            color: #FFC107;
+            color: #ffc107;
         }
         
-        .search-form {
+        .status-potential {
+            background-color: rgba(0, 123, 255, 0.2);
+            color: #007bff;
+        }
+        
+        .search-box {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
         }
         
-        .search-form input {
+        .search-input {
             flex: 1;
         }
         
-        .member-actions {
+        .member-form {
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner-border {
+            color: var(--primary);
+        }
+        
+        .evolution-status {
+            background: var(--gray);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+        }
+        
+        .status-connected {
+            color: #28a745;
+        }
+        
+        .status-disconnected {
+            color: #dc3545;
+        }
+        
+        .client-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .type-member {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        
+        .type-potential {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .phone-prefix {
             display: flex;
+            align-items: center;
             gap: 10px;
-            margin-top: 15px;
+        }
+        
+        .phone-prefix-text {
+            background: var(--gray);
+            padding: 14px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            min-width: 60px;
+            text-align: center;
         }
     </style>
 </head>
@@ -520,121 +583,365 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="miembros-tab" data-bs-toggle="tab" data-bs-target="#miembros" type="button" role="tab" aria-controls="miembros" aria-selected="false">
-                    <i class="fas fa-users"></i> Miembros
+                <button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes" type="button" role="tab" aria-controls="clientes" aria-selected="false">
+                    <i class="fas fa-users"></i> Clientes
                 </button>
             </li>
         </ul>
         
         <div class="tab-content" id="myTabContent">
-            <!-- Pestaña de Captación (existente) -->
+            <!-- Pestaña de Captación -->
             <div class="tab-pane fade show active" id="captacion" role="tabpanel" aria-labelledby="captacion-tab">
-                <!-- Contenido existente de captación -->
-            </div>
-            
-            <!-- Pestaña de Estadísticas (existente) -->
-            <div class="tab-pane fade" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
-                <!-- Contenido existente de estadísticas -->
-            </div>
-            
-            <!-- Nueva Pestaña de Miembros -->
-            <div class="tab-pane fade" id="miembros" role="tabpanel" aria-labelledby="miembros-tab">
                 <div class="header">
                     <div class="logo">
                         <div class="logo-text">ELEMENT<span>AL</span></div>
                         <div class="logo-subtext">CLUB</div>
                     </div>
-                    <h1>Gestión de Miembros</h1>
-                    <p>Consulta y administración de miembros</p>
+                    <h1>Captación de Clientes</h1>
+                    <p>Exclusivo recepcionistas</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="evolution-status">
+                        <h4 class="section-title"><i class="fab fa-whatsapp"></i> Estado de Evolution API</h4>
+                        <div id="evolutionStatus">
+                            <span class="status-disconnected"><i class="fas fa-circle"></i> Verificando conexión...</span>
+                        </div>
+                    </div>
+                    
+                    <form id="clientForm">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-user"></i> Información Personal</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label required">Nombre(s)</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="lastName1" class="form-label required">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="lastName1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="lastName2" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="lastName2">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone" class="form-label required">Teléfono</label>
+                                    <div class="phone-prefix">
+                                        <span class="phone-prefix-text">521</span>
+                                        <input type="tel" class="form-control" id="phone" placeholder="XXXXXXX (10 dígitos)" required maxlength="10">
+                                    </div>
+                                    <small class="text-muted">Solo ingresa los 10 dígitos, el sistema agregará automáticamente el 521</small>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="gender" class="form-label required">Género</label>
+                                    <select class="form-select" id="gender" required>
+                                        <option value="" selected disabled>Selecciona una opción</option>
+                                        <option value="Hombre">Hombre</option>
+                                        <option value="Mujer">Mujer</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="source" class="form-label required">¿Dónde nos conoció?</label>
+                                    <select class="form-select" id="source" required>
+                                        <option value="" selected disabled>Selecciona una opción</option>
+                                        <option value="Pasa por aquí">Pasa por aquí</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Recomendación">Recomendación</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-sticky-note"></i> Observaciones</h3>
+                            <div class="form-group">
+                                <label for="observations" class="form-label">Notas adicionales</label>
+                                <textarea class="form-control" id="observations" placeholder="Agregar cualquier observación relevante sobre el cliente potencial"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="whatsapp-preview" id="whatsappPreview">
+                            <div class="preview-title">Vista previa del mensaje de WhatsApp:</div>
+                            <div class="message-bubble" id="welcomeMessage">
+                                ¡Hola <span id="previewName"></span>! 👋 Te doy la bienvenida a Elemental Club 🏋️
+                            </div>
+                            <div class="message-bubble">
+                                Me da mucho gusto que te intereses en formar parte de nuestra comunidad fitness 💪 Te comparto toda la información sobre nuestros planes y clases:
+                            </div>
+                            <div class="message-bubble">
+                                <img src="https://i.ibb.co/XXXXXXX/plan-basico.jpg" alt="Plan Básico" class="image-preview" id="previewImage1">
+                            </div>
+                            <div class="message-bubble">
+                                <img src="https://i.ibb.co/XXXXXXX/plan-premium.jpg" alt="Plan Premium" class="image-preview" id="previewImage2">
+                            </div>
+                            <div class="message-bubble">
+                                ¡Estoy aquí para resolver cualquier duda que tengas! 🔥 ¿Cuándo te gustaría empezar tu transformación?
+                            </div>
+                        </div>
+                        
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Enviando mensaje...</span>
+                            </div>
+                            <p class="mt-2">Enviando mensaje por WhatsApp...</p>
+                        </div>
+                        
+                        <button type="submit" class="btn-whatsapp" id="sendWhatsAppBtn">
+                            <i class="fab fa-whatsapp"></i> Enviar WhatsApp con Evolution API
+                        </button>
+                    </form>
+                    
+                    <div class="success-message" id="successMessage">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>¡Información enviada con éxito!</h3>
+                        <p>Los datos del cliente se han guardado y el mensaje se ha enviado por WhatsApp.</p>
+                        <button class="btn-new-client" onclick="resetForm()">
+                            Agregar nuevo cliente
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pestaña de Estadísticas -->
+            <div class="tab-pane fade" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">ELEMENT<span>AL</span></div>
+                        <div class="logo-subtext">CLUB</div>
+                    </div>
+                    <h1>Estadísticas de Captación</h1>
+                    <p>Rendimiento por empleado</p>
                 </div>
                 
                 <div class="form-container">
                     <div class="stats-container">
-                        <h3 class="stats-title">Buscar Miembro</h3>
-                        <div class="search-form">
-                            <input type="tel" class="form-control" id="searchPhone" placeholder="Ingresa el número de teléfono (+52 XXX XXX XXXX)">
-                            <button class="btn btn-primary" onclick="searchMember()">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
+                        <h3 class="stats-title">Resumen General</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalClients">0</div>
+                                <div class="stat-label">Total de clientes</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="myClients">0</div>
+                                <div class="stat-label">Tus clientes captados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalPotentials">0</div>
+                                <div class="stat-label">Clientes potenciales</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalMembers">0</div>
+                                <div class="stat-label">Miembros activos</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div id="memberResult" class="stats-container" style="display: none;">
-                        <h3 class="stats-title">Información del Miembro</h3>
-                        <div id="memberInfo">
-                            <!-- La información del miembro se cargará aquí -->
+                    <div class="stats-container">
+                        <h3 class="stats-title">Rendimiento por Empleado</h3>
+                        <canvas id="employeeChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <h3 class="stats-title">Últimos clientes captados</h3>
+                        <div id="recentClients" class="list-group">
+                            <!-- Los clientes recientes se cargarán aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pestaña de Clientes -->
+            <div class="tab-pane fade" id="clientes" role="tabpanel" aria-labelledby="clientes-tab">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">ELEMENT<span>AL</span></div>
+                        <div class="logo-subtext">CLUB</div>
+                    </div>
+                    <h1>Gestión de Clientes</h1>
+                    <p>Consulta y registro de clientes</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-search"></i> Buscar Cliente</h3>
+                        
+                        <div class="search-box">
+                            <div class="form-group search-input">
+                                <label for="searchPhone" class="form-label">Número de Teléfono</label>
+                                <div class="phone-prefix">
+                                    <span class="phone-prefix-text">521</span>
+                                    <input type="tel" class="form-control" id="searchPhone" placeholder="XXXXXXX (10 dígitos)" maxlength="10">
+                                </div>
+                                <small class="text-muted">Solo ingresa los 10 dígitos, el sistema buscará con el prefijo 521</small>
+                            </div>
+                            <div class="form-group" style="align-self: flex-end;">
+                                <button type="button" class="btn btn-primary" onclick="searchClient()" style="padding: 14px 16px;">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="clientInfo" class="member-info">
+                            <h4 class="preview-title">Información del Cliente</h4>
+                            <div class="member-field">
+                                <span class="member-label">Nombre:</span>
+                                <span class="member-value" id="infoName"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Teléfono:</span>
+                                <span class="member-value" id="infoPhone"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Tipo de Cliente:</span>
+                                <span class="member-value" id="infoClientType"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Tipo de Membresía:</span>
+                                <span class="member-value" id="infoMembershipType"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Duración:</span>
+                                <span class="member-value" id="infoMembershipDuration"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Estatus:</span>
+                                <span class="member-value" id="infoStatus"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Fecha de Registro:</span>
+                                <span class="member-value" id="infoCreatedAt"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Fecha de Vencimiento:</span>
+                                <span class="member-value" id="infoExpiryDate"></span>
+                            </div>
+                            <div class="member-field">
+                                <span class="member-label">Captado por:</span>
+                                <span class="member-value" id="infoEmployee"></span>
+                            </div>
+                        </div>
+                        
+                        <div id="clientNotFound" class="alert alert-info" style="display: none;">
+                            No se encontró un cliente con este número de teléfono. 
+                            <button type="button" class="btn btn-link p-0 align-baseline" onclick="showClientForm()">¿Desea agregarlo como nuevo cliente?</button>
                         </div>
                     </div>
                     
-                    <div id="addMemberForm" class="stats-container" style="display: none;">
-                        <h3 class="stats-title">Registrar Nuevo Miembro</h3>
-                        <form id="newMemberForm">
-                            <input type="hidden" id="memberPhone">
+                    <div id="clientFormSection" class="member-form">
+                        <h3 class="section-title"><i class="fas fa-user-plus"></i> Actualizar Cliente</h3>
+                        
+                        <form id="updateClientForm">
+                            <input type="hidden" id="clientPhone">
+                            <input type="hidden" id="clientId">
+                            
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="memberFirstName" class="form-label required">Nombre(s)</label>
-                                    <input type="text" class="form-control" id="memberFirstName" required>
+                                    <label for="cFirstName" class="form-label required">Nombre(s)</label>
+                                    <input type="text" class="form-control" id="cFirstName" required>
                                 </div>
+                                
                                 <div class="form-group">
-                                    <label for="memberLastName1" class="form-label required">Apellido Paterno</label>
-                                    <input type="text" class="form-control" id="memberLastName1" required>
+                                    <label for="cLastName1" class="form-label required">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="cLastName1" required>
                                 </div>
                             </div>
                             
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="memberLastName2" class="form-label">Apellido Materno</label>
-                                    <input type="text" class="form-control" id="memberLastName2">
+                                    <label for="cLastName2" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="cLastName2">
                                 </div>
+                                
                                 <div class="form-group">
-                                    <label for="memberPostalCode" class="form-label">Código Postal</label>
-                                    <input type="text" class="form-control" id="memberPostalCode">
+                                    <label for="cPostalCode" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="cPostalCode">
                                 </div>
                             </div>
                             
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="memberDOB" class="form-label">Fecha de Nacimiento</label>
-                                    <input type="date" class="form-control" id="memberDOB">
+                                    <label for="cDob" class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="cDob">
                                 </div>
+                                
                                 <div class="form-group">
-                                    <label for="memberType" class="form-label required">Tipo de Membresía</label>
-                                    <select class="form-select" id="memberType" required>
+                                    <label for="cClientType" class="form-label required">Tipo de Cliente</label>
+                                    <select class="form-select" id="cClientType" required>
+                                        <option value="potential">Potencial</option>
+                                        <option value="member">Miembro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid" id="membershipFields">
+                                <div class="form-group">
+                                    <label for="cMembershipType" class="form-label">Tipo de Membresía</label>
+                                    <select class="form-select" id="cMembershipType">
                                         <option value="" selected disabled>Selecciona una opción</option>
                                         <option value="basic">Básica</option>
                                         <option value="unlimited">Ilimitada</option>
                                     </select>
                                 </div>
-                            </div>
-                            
-                            <div class="form-grid">
+                                
                                 <div class="form-group">
-                                    <label for="memberStatus" class="form-label required">Estado de Membresía</label>
-                                    <select class="form-select" id="memberStatus" required>
+                                    <label for="cMembershipStatus" class="form-label">Estatus de Membresía</label>
+                                    <select class="form-select" id="cMembershipStatus">
+                                        <option value="" selected disabled>Selecciona una opción</option>
                                         <option value="active">Activa</option>
                                         <option value="inactive">Inactiva</option>
                                         <option value="pending">Pendiente</option>
                                     </select>
                                 </div>
+                            </div>
+                            
+                            <div class="form-grid" id="durationField">
                                 <div class="form-group">
-                                    <label for="memberStart" class="form-label required">Inicio de Membresía</label>
-                                    <input type="date" class="form-control" id="memberStart" required>
+                                    <label for="cMembershipDuration" class="form-label">Duración de Membresía</label>
+                                    <select class="form-select" id="cMembershipDuration">
+                                        <option value="" selected disabled>Selecciona una duración</option>
+                                        <option value="monthly">Mensual</option>
+                                        <option value="quarterly">Trimestral</option>
+                                        <option value="semiannual">Semestral</option>
+                                        <option value="annual">Anual</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cMembershipExpires" class="form-label">Fecha de Vencimiento</label>
+                                    <input type="date" class="form-control" id="cMembershipExpires" readonly>
                                 </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="memberExpires" class="form-label required">Vencimiento de Membresía</label>
-                                <input type="date" class="form-control" id="memberExpires" required>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Registrar Miembro
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 24px; width: 100%;">
+                                <i class="fas fa-save"></i> Actualizar Cliente
                             </button>
                         </form>
                     </div>
                     
-                    <div id="memberMessage" class="stats-container" style="display: none;">
-                        <!-- Mensajes de éxito o error se mostrarán aquí -->
+                    <div id="clientSuccess" class="success-message" style="display: none;">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>¡Cliente actualizado con éxito!</h3>
+                        <p>La información del cliente se ha actualizado correctamente.</p>
+                        <button class="btn-new-client" onclick="resetClientForm()">
+                            Buscar otro cliente
+                        </button>
                     </div>
                 </div>
             </div>
@@ -648,16 +955,301 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configuración de Supabase (REMPLAZA CON TUS PROPIAS CREDENCIALES)
-        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-        const SUPABASE_ANON_KEY = 'tu-anon-key';
+        // Configuración de Evolution API
+        const EVOLUTION_API_URL = 'http://127.0.0.1:8080';
+        const EVOLUTION_API_TOKEN = 'DD5727C5E0D8-4BB5-AF53-90DC248B032A';
+        const WHATSAPP_NUMBER = 'evolution_exchange';
         
-        // Inicializar Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+        // URLs de las imágenes (reemplaza con tus URLs reales de ImgBB)
+        const IMAGE_URLS = {
+            plan1: 'https://i.ibb.co/XXXXXXX/plan-basico.jpg',
+            plan2: 'https://i.ibb.co/XXXXXXX/plan-premium.jpg'
+        };
+
         // Variables globales
         let currentEmployee = null;
         let employeeChart = null;
+        let supabase = null;
+        let employeesCache = {}; // Cache para nombres de empleados
+        
+        // Inicializar Supabase con las credenciales
+        function initSupabase() {
+            const supabaseUrl = 'https://aveonbmcbopqqcambxoi.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2ZW9uYm1jYm9wcXFjYW1ieG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0MzksImV4cCI6MjA3MzAxNDQzOX0.wKhEMF4K6Zv6PuobxCwubmhNTyzk6qlmjKyGO7JqH9Y';
+            
+            if (supabaseUrl && supabaseKey) {
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                return true;
+            }
+            return false;
+        }
+        
+        // Función para formatear número de teléfono completo (521 + 10 dígitos)
+        function formatFullPhone(phoneDigits) {
+            // Remover cualquier caracter que no sea número
+            const cleanPhone = phoneDigits.replace(/\D/g, '');
+            
+            // Verificar que tenga 10 dígitos
+            if (cleanPhone.length === 10) {
+                return `521${cleanPhone}`;
+            }
+            return null;
+        }
+        
+        // Función para extraer solo los dígitos del teléfono (sin 521)
+        function extractPhoneDigits(fullPhone) {
+            if (!fullPhone) return '';
+            // Remover el prefijo 521 si existe
+            return fullPhone.replace(/^521/, '');
+        }
+        
+        // Calcular fecha de vencimiento basada en la duración seleccionada
+        function calculateExpiryDate(duration) {
+            const today = new Date();
+            const expiryDate = new Date(today);
+            
+            switch(duration) {
+                case 'monthly':
+                    expiryDate.setMonth(today.getMonth() + 1);
+                    break;
+                case 'quarterly':
+                    expiryDate.setMonth(today.getMonth() + 3);
+                    break;
+                case 'semiannual':
+                    expiryDate.setMonth(today.getMonth() + 6);
+                    break;
+                case 'annual':
+                    expiryDate.setFullYear(today.getFullYear() + 1);
+                    break;
+                default:
+                    return null;
+            }
+            
+            return expiryDate.toISOString().split('T')[0];
+        }
+        
+        // Obtener nombre del empleado desde la tabla employees
+        async function getEmployeeName(empleadoId) {
+            if (!empleadoId) return 'No asignado';
+            
+            // Verificar si ya tenemos el nombre en cache
+            if (employeesCache[empleadoId]) {
+                return employeesCache[empleadoId];
+            }
+            
+            try {
+                const { data: employee, error } = await supabase
+                    .from('employees')
+                    .select('name, last_name')
+                    .eq('id', empleadoId)
+                    .single();
+                
+                if (error || !employee) {
+                    console.error('Error al obtener empleado:', error);
+                    return 'Empleado no encontrado';
+                }
+                
+                const employeeName = `${employee.name} ${employee.last_name}`;
+                // Guardar en cache
+                employeesCache[empleadoId] = employeeName;
+                return employeeName;
+            } catch (error) {
+                console.error('Error al obtener empleado:', error);
+                return 'Error al cargar';
+            }
+        }
+        
+        // Obtener nombres de empleados en lote para múltiples clientes
+        async function getEmployeeNamesForClients(clients) {
+            if (!clients || clients.length === 0) return clients;
+            
+            // Obtener IDs únicos de empleados
+            const employeeIds = [...new Set(clients
+                .filter(client => client.empleado_id)
+                .map(client => client.empleado_id))];
+            
+            if (employeeIds.length === 0) return clients;
+            
+            try {
+                // Obtener todos los empleados necesarios
+                const { data: employees, error } = await supabase
+                    .from('employees')
+                    .select('id, name, last_name')
+                    .in('id', employeeIds);
+                
+                if (error) {
+                    console.error('Error al obtener empleados:', error);
+                    return clients;
+                }
+                
+                // Crear mapa de empleados
+                const employeeMap = {};
+                employees.forEach(emp => {
+                    employeeMap[emp.id] = `${emp.name} ${emp.last_name}`;
+                    employeesCache[emp.id] = employeeMap[emp.id]; // Actualizar cache
+                });
+                
+                // Agregar nombres a los clientes
+                return clients.map(client => ({
+                    ...client,
+                    empleado_name: employeeMap[client.empleado_id] || 'No asignado'
+                }));
+            } catch (error) {
+                console.error('Error al obtener empleados:', error);
+                return clients;
+            }
+        }
+
+    // Verificar conexión con Evolution API
+    async function checkEvolutionConnection() {
+        const statusElement = document.getElementById('evolutionStatus');
+    
+        // Lista de endpoints a intentar según la versión de Evolution API
+        const endpoints = [
+            `/instance/connectionState/${WHATSAPP_NUMBER}`,
+            `/instance/fetchInstances`,
+            `/instance/connect/${WHATSAPP_NUMBER}`,
+            `/${WHATSAPP_NUMBER}/status`
+        ];
+        
+        statusElement.innerHTML = `<span class="status-disconnected"><i class="fas fa-spinner fa-spin"></i> Verificando conexión...</span>`;
+        
+        for (const endpoint of endpoints) {
+            try {
+                console.log(`Intentando endpoint: ${EVOLUTION_API_URL}${endpoint}`);
+
+                const response = await fetch(`${EVOLUTION_API_URL}${endpoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': EVOLUTION_API_TOKEN,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log(`Respuesta del endpoint ${endpoint}:`, response.status);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Datos recibidos:', data);
+
+                    // Verificar diferentes estructuras de respuesta
+                    let isConnected = false;
+
+                    // Para fetchInstances
+                    if (data.instances) {
+                        const instance = data.instances.find(i => 
+                            i.instanceName === WHATSAPP_NUMBER || 
+                            i.instance?.instanceName === WHATSAPP_NUMBER
+                        );
+                        isConnected = instance && (instance.status === 'open' || instance.state === 'open');
+                    }
+                    // Para connectionState
+                    else if (data.state) {
+                        isConnected = data.state === 'open' || data.state === 'connected';
+                    }
+                    // Para status
+                    else if (data.status) {
+                        isConnected = data.status === 'open' || data.status === 'connected';
+                    }
+                    // Para respuestas directas
+                    else if (data.instance) {
+                        isConnected = data.instance.status === 'open' || data.instance.state === 'open';
+                    }
+
+                    if (isConnected) {
+                        statusElement.innerHTML = `<span class="status-connected"><i class="fas fa-circle"></i> Conectado - Evolution API funcionando</span>`;
+                        return true;
+                    } else {
+                        statusElement.innerHTML = `<span class="status-disconnected"><i class="fas fa-circle"></i> API respondió pero WhatsApp no está conectado</span>`;
+                        return false;
+                    }
+                }
+            } catch (error) {
+                console.error(`Error en endpoint ${endpoint}:`, error);
+                // Continuar con el siguiente endpoint
+            }
+        }
+    
+        // Si ningún endpoint funcionó
+        statusElement.innerHTML = `<span class="status-disconnected"><i class="fas fa-circle"></i> No se pudo conectar - Verifica la URL y API Key</span>`;
+        console.error('No se pudo conectar a ningún endpoint de Evolution API');
+        return false;
+    }
+        
+        // Enviar secuencia de mensajes de bienvenida
+        async function sendWelcomeSequence(phoneNumber, clientName) {
+            const messages = [
+                `¡Hola ${clientName}! 👋 Te doy la bienvenida a Elemental Club 🏋️`,
+                `Me da mucho gusto que te intereses en formar parte de nuestra comunidad fitness 💪 Te comparto toda la información sobre nuestros planes y clases:`,
+                `¡Estoy aquí para resolver cualquier duda que tengas! 🔥 ¿Cuándo te gustaría empezar tu transformación?`
+            ];
+            
+            try {
+                // Enviar mensajes de texto
+                for (let i = 0; i < messages.length; i++) {
+                    await fetch(`${EVOLUTION_API_URL}/message/sendText/${WHATSAPP_NUMBER}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': EVOLUTION_API_TOKEN
+                        },
+                        body: JSON.stringify({
+                            number: phoneNumber,
+                            text: messages[i],
+                            options: {
+                                delay: 1500,
+                                presence: 'composing'
+                            }
+                        })
+                    });
+                    
+                    // Esperar entre mensajes
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+                
+                // Enviar imágenes de los planes
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Enviar primera imagen
+                await fetch(`${EVOLUTION_API_URL}/message/sendMedia/${WHATSAPP_NUMBER}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': EVOLUTION_API_TOKEN
+                    },
+                    body: JSON.stringify({
+                        number: phoneNumber,
+                        mediaMessage: {
+                            media: IMAGE_URLS.plan1,
+                            caption: 'Plan Básico - Acceso a todas las áreas del gimnasio 🏃‍♂️'
+                        }
+                    })
+                });
+                
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Enviar segunda imagen
+                await fetch(`${EVOLUTION_API_URL}/message/sendMedia/${WHATSAPP_NUMBER}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': EVOLUTION_API_TOKEN
+                    },
+                    body: JSON.stringify({
+                        number: phoneNumber,
+                        mediaMessage: {
+                            media: IMAGE_URLS.plan2,
+                            caption: 'Plan Premium - Incluye clases grupales y entrenador personal 🎯'
+                        }
+                    })
+                });
+                
+                return { success: true };
+            } catch (error) {
+                console.error('Error en secuencia de mensajes:', error);
+                return { success: false, message: error.message };
+            }
+        }
         
         // Verificar si el usuario ya ha iniciado sesión
         function checkAuth() {
@@ -665,6 +1257,14 @@
             if (savedEmployee) {
                 currentEmployee = JSON.parse(savedEmployee);
                 showApp();
+                
+                // Inicializar Supabase después de iniciar sesión
+                if (initSupabase()) {
+                    console.log('Supabase inicializado correctamente');
+                }
+                
+                // Verificar conexión con Evolution API
+                checkEvolutionConnection();
             } else {
                 showLogin();
             }
@@ -694,8 +1294,15 @@
             const password = document.getElementById('password').value;
             const errorElement = document.getElementById('loginError');
             
+            // Inicializar Supabase antes de intentar iniciar sesión
+            if (!initSupabase()) {
+                errorElement.textContent = 'Error: No se pudo inicializar la conexión con la base de datos.';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
             try {
-                // Buscar empleado en la tabla employees
+                // Buscar empleado en la base de datos
                 const { data: employees, error } = await supabase
                     .from('employees')
                     .select('*')
@@ -708,7 +1315,7 @@
                     return;
                 }
                 
-                if (employees.length === 0) {
+                if (!employees || employees.length === 0) {
                     errorElement.textContent = 'Usuario o contraseña incorrectos.';
                     errorElement.style.display = 'block';
                     return;
@@ -722,6 +1329,9 @@
                 localStorage.setItem('currentEmployee', JSON.stringify(currentEmployee));
                 
                 showApp();
+                
+                // Verificar conexión con Evolution API después del login
+                checkEvolutionConnection();
             } catch (error) {
                 errorElement.textContent = 'Error al iniciar sesión. Intenta nuevamente.';
                 errorElement.style.display = 'block';
@@ -735,263 +1345,652 @@
             showLogin();
         }
         
-        // Buscar miembro por teléfono
-        async function searchMember() {
-            const phone = document.getElementById('searchPhone').value;
-            if (!phone) {
-                showMessage('Por favor ingresa un número de teléfono', 'error');
-                return;
-            }
+        // Cargar estadísticas
+        async function loadStatistics() {
+            if (!currentEmployee || !supabase) return;
             
             try {
-                // Buscar en la tabla members
-                const { data: members, error } = await supabase
-                    .from('members')
+                // Obtener todos los clientes (desde la tabla clients)
+                const { data: clients, error } = await supabase
+                    .from('clients')
                     .select('*')
-                    .eq('phone', phone);
+                    .order('created_at', { ascending: false });
                 
                 if (error) {
-                    console.error('Error al buscar miembro:', error);
-                    showMessage('Error al buscar miembro', 'error');
+                    console.error('Error al cargar clientes:', error);
                     return;
                 }
                 
-                if (members && members.length > 0) {
-                    // Mostrar información del miembro
-                    displayMemberInfo(members[0]);
-                    showMessage('Miembro encontrado', 'success');
-                } else {
-                    // Buscar en potentials para sugerir registro
-                    const { data: potentials, error: potError } = await supabase
-                        .from('potentials')
-                        .select('*')
-                        .eq('phone', phone);
-                    
-                    if (potError) {
-                        console.error('Error al buscar en potenciales:', potError);
-                    }
-                    
-                    if (potentials && potentials.length > 0) {
-                        // Mostrar formulario de registro con datos de potentials
-                        showAddMemberForm(phone, potentials[0]);
-                        showMessage('Este número está registrado como cliente potencial. Puede convertirlo en miembro.', 'info');
-                    } else {
-                        // Mostrar formulario de registro vacío
-                        showAddMemberForm(phone);
-                        showMessage('Número no encontrado. Puede registrar un nuevo miembro.', 'info');
+                // Obtener nombres de empleados para los clientes
+                const clientsWithEmployeeNames = await getEmployeeNamesForClients(clients || []);
+                
+                // Actualizar contadores
+                document.getElementById('totalClients').textContent = clientsWithEmployeeNames ? clientsWithEmployeeNames.length : 0;
+                
+                // Contar clientes del empleado actual
+                const myClients = clientsWithEmployeeNames ? 
+                    clientsWithEmployeeNames.filter(client => client.empleado_id === currentEmployee.id) : [];
+                document.getElementById('myClients').textContent = myClients.length;
+                
+                // Contar por tipo de cliente
+                const potentials = clientsWithEmployeeNames ? 
+                    clientsWithEmployeeNames.filter(client => client.client_type === 'potential') : [];
+                const members = clientsWithEmployeeNames ? 
+                    clientsWithEmployeeNames.filter(client => client.client_type === 'member') : [];
+                
+                document.getElementById('totalPotentials').textContent = potentials.length;
+                document.getElementById('totalMembers').textContent = members.length;
+                
+                // Calcular estadísticas por empleado
+                const employeeStats = {};
+                if (clientsWithEmployeeNames) {
+                    clientsWithEmployeeNames.forEach(client => {
+                        if (client.empleado_name) {
+                            if (!employeeStats[client.empleado_name]) {
+                                employeeStats[client.empleado_name] = 0;
+                            }
+                            employeeStats[client.empleado_name]++;
+                        }
+                    });
+                }
+                
+                // Crear gráfica
+                createEmployeeChart(employeeStats);
+                
+                // Mostrar clientes recientes
+                showRecentClients(clientsWithEmployeeNames ? clientsWithEmployeeNames.slice(0, 5) : []);
+                
+            } catch (error) {
+                console.error('Error al cargar estadísticas:', error);
+            }
+        }
+        
+        // Crear gráfica de empleados
+        function createEmployeeChart(employeeStats) {
+            const ctx = document.getElementById('employeeChart').getContext('2d');
+            
+            // Destruir gráfica anterior si existe
+            if (employeeChart) {
+                employeeChart.destroy();
+            }
+            
+            const employees = Object.keys(employeeStats);
+            const counts = Object.values(employeeStats);
+            
+            // Colores para la gráfica
+            const backgroundColors = employees.map((name, index) => {
+                return name === currentEmployee.name ? '#FF7B00' : `hsl(${index * 40}, 70%, 50%)`;
+            });
+            
+            employeeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: employees,
+                    datasets: [{
+                        label: 'Clientes captados',
+                        data: counts,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Clientes: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#E0E0E0'
+                            },
+                            grid: {
+                                color: '#383838'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#E0E0E0',
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: {
+                                color: '#383838'
+                            }
+                        }
                     }
                 }
+            });
+        }
+        
+        // Mostrar clientes recientes
+        function showRecentClients(clients) {
+            const container = document.getElementById('recentClients');
+            container.innerHTML = '';
+            
+            if (clients.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-3">No hay clientes captados aún</div>';
+                return;
+            }
+            
+            clients.forEach(client => {
+                const date = new Date(client.created_at);
+                const formattedDate = date.toLocaleDateString('es-MX');
+                const typeBadge = client.client_type === 'member' ? 
+                    '<span class="client-type-badge type-member">Miembro</span>' : 
+                    '<span class="client-type-badge type-potential">Potencial</span>';
+                
+                // Formatear teléfono para mostrar
+                const displayPhone = client.phone ? `521${extractPhoneDigits(client.phone)}` : 'N/A';
+                
+                const clientEl = document.createElement('div');
+                clientEl.className = 'list-group-item list-group-item-action bg-gray border-border';
+                clientEl.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${client.first_name} ${client.last_name1} ${client.last_name2 || ''} ${typeBadge}</h6>
+                        <small class="text-muted">${formattedDate}</small>
+                    </div>
+                    <p class="mb-1">Tel: ${displayPhone} | Captado por: ${client.empleado_name || 'N/A'}</p>
+                    <small class="text-muted">${client.source || 'Cliente existente'}</small>
+                `;
+                
+                container.appendChild(clientEl);
+            });
+        }
+        
+        // Buscar cliente por teléfono
+        async function searchClient() {
+            if (!supabase) {
+                alert('Error: No hay conexión con la base de datos.');
+                return;
+            }
+            
+            const phoneDigits = document.getElementById('searchPhone').value.trim();
+            if (!phoneDigits) {
+                alert('Por favor ingresa un número de teléfono');
+                return;
+            }
+            
+            // Verificar que sean 10 dígitos
+            if (phoneDigits.length !== 10) {
+                alert('El número de teléfono debe tener exactamente 10 dígitos');
+                return;
+            }
+            
+            // Formatear número completo para búsqueda
+            const fullPhone = formatFullPhone(phoneDigits);
+            
+            try {
+                // Buscar en la tabla de clientes
+                const { data: clients, error } = await supabase
+                    .from('clients')
+                    .select('*')
+                    .eq('phone', fullPhone);
+                
+                if (error) {
+                    console.error('Error al buscar cliente:', error);
+                    alert('Error al buscar cliente: ' + error.message);
+                    return;
+                }
+                
+                if (clients && clients.length > 0) {
+                    // Obtener nombre del empleado
+                    const client = clients[0];
+                    const employeeName = await getEmployeeName(client.empleado_id);
+                    const clientWithEmployeeName = {
+                        ...client,
+                        empleado_name: employeeName
+                    };
+                    
+                    // Mostrar información del cliente
+                    displayClientInfo(clientWithEmployeeName);
+                } else {
+                    // Mostrar formulario para agregar nuevo cliente
+                    document.getElementById('clientNotFound').style.display = 'block';
+                    document.getElementById('clientInfo').style.display = 'none';
+                    document.getElementById('clientFormSection').style.display = 'block';
+                    document.getElementById('clientSuccess').style.display = 'none';
+                    
+                    // Establecer el teléfono en el formulario (solo dígitos)
+                    document.getElementById('clientPhone').value = phoneDigits;
+                }
             } catch (error) {
-                console.error('Error:', error);
-                showMessage('Error al procesar la solicitud', 'error');
+                console.error('Error al buscar cliente:', error);
+                alert('Error al buscar cliente: ' + error.message);
             }
         }
         
-        // Mostrar información del miembro
-        function displayMemberInfo(member) {
-            const memberInfoDiv = document.getElementById('memberInfo');
-            const memberResultDiv = document.getElementById('memberResult');
-            const addMemberFormDiv = document.getElementById('addMemberForm');
+        // Mostrar información del cliente
+        function displayClientInfo(client) {
+            document.getElementById('clientInfo').style.display = 'block';
+            document.getElementById('clientNotFound').style.display = 'none';
+            document.getElementById('clientFormSection').style.display = 'none';
+            document.getElementById('clientSuccess').style.display = 'none';
             
-            // Ocultar formulario de registro
-            addMemberFormDiv.style.display = 'none';
+            document.getElementById('infoName').textContent = `${client.first_name} ${client.last_name1} ${client.last_name2 || ''}`;
             
-            // Formatear fechas
-            const startDate = new Date(member.membership_starts).toLocaleDateString('es-MX');
-            const expireDate = new Date(member.membership_expires).toLocaleDateString('es-MX');
-            const dob = member.dob ? new Date(member.dob).toLocaleDateString('es-MX') : 'No especificada';
+            // Mostrar teléfono formateado
+            const displayPhone = client.phone ? `521${extractPhoneDigits(client.phone)}` : 'N/A';
+            document.getElementById('infoPhone').textContent = displayPhone;
             
-            // Traducir tipo de membresía
-            let membershipType = member.membership_type;
-            if (membershipType === 'basic') membershipType = 'Básica';
-            if (membershipType === 'unlimited') membershipType = 'Ilimitada';
+            // Tipo de cliente
+            const clientTypeText = client.client_type === 'member' ? 'Miembro' : 'Cliente Potencial';
+            const clientTypeBadge = client.client_type === 'member' ? 
+                '<span class="status-badge status-active">Miembro</span>' : 
+                '<span class="status-badge status-potential">Potencial</span>';
+            document.getElementById('infoClientType').innerHTML = clientTypeBadge;
             
-            // Traducir estado
-            let statusText = member.membership_status;
-            let statusClass = 'status-active';
-            if (member.membership_status === 'inactive') {
-                statusText = 'Inactiva';
-                statusClass = 'status-inactive';
-            } else if (member.membership_status === 'pending') {
-                statusText = 'Pendiente';
-                statusClass = 'status-pending';
+            // Información de membresía
+            document.getElementById('infoMembershipType').textContent = client.membership_type ? 
+                (client.membership_type === 'basic' ? 'Básica' : 'Ilimitada') : 'No aplica';
+            
+            // Duración de membresía
+            const durationText = getDurationText(client.membership_duration);
+            document.getElementById('infoMembershipDuration').textContent = durationText || 'No definida';
+            
+            // Estatus
+            let statusClass = '';
+            let statusText = '';
+            if (client.client_type === 'member') {
+                switch(client.membership_status) {
+                    case 'active':
+                        statusClass = 'status-active';
+                        statusText = 'Activa';
+                        break;
+                    case 'inactive':
+                        statusClass = 'status-inactive';
+                        statusText = 'Inactiva';
+                        break;
+                    case 'pending':
+                        statusClass = 'status-pending';
+                        statusText = 'Pendiente';
+                        break;
+                    default:
+                        statusClass = 'status-inactive';
+                        statusText = client.membership_status || 'No definido';
+                }
             } else {
-                statusText = 'Activa';
+                statusClass = 'status-potential';
+                statusText = 'Potencial';
             }
+            document.getElementById('infoStatus').innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
             
-            memberInfoDiv.innerHTML = `
-                <div class="member-card">
-                    <div class="member-info">
-                        <div class="member-field">
-                            <strong>Nombre completo</strong>
-                            ${member.first_name} ${member.last_name1} ${member.last_name2 || ''}
-                        </div>
-                        <div class="member-field">
-                            <strong>Teléfono</strong>
-                            ${member.phone}
-                        </div>
-                        <div class="member-field">
-                            <strong>Fecha de nacimiento</strong>
-                            ${dob}
-                        </div>
-                        <div class="member-field">
-                            <strong>Código postal</strong>
-                            ${member.postal_code || 'No especificado'}
-                        </div>
-                    </div>
-                    
-                    <div class="member-info">
-                        <div class="member-field">
-                            <strong>Tipo de membresía</strong>
-                            ${membershipType}
-                        </div>
-                        <div class="member-field">
-                            <strong>Estado</strong>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </div>
-                        <div class="member-field">
-                            <strong>Inicio de membresía</strong>
-                            ${startDate}
-                        </div>
-                        <div class="member-field">
-                            <strong>Vencimiento</strong>
-                            ${expireDate}
-                        </div>
-                    </div>
-                    
-                    <div class="member-actions">
-                        <button class="btn btn-primary" onclick="editMember('${member.id}')">
-                            <i class="fas fa-edit"></i> Editar
-                        </button>
-                        <button class="btn btn-warning" onclick="renewMember('${member.id}')">
-                            <i class="fas fa-sync-alt"></i> Renovar
-                        </button>
-                    </div>
-                </div>
-            `;
+            // Fechas
+            const createdDate = new Date(client.created_at);
+            document.getElementById('infoCreatedAt').textContent = createdDate.toLocaleDateString();
             
-            // Mostrar resultado
-            memberResultDiv.style.display = 'block';
-        }
-        
-        // Mostrar formulario para añadir miembro
-        function showAddMemberForm(phone, potentialData = null) {
-            const memberResultDiv = document.getElementById('memberResult');
-            const addMemberFormDiv = document.getElementById('addMemberForm');
-            const memberMessageDiv = document.getElementById('memberMessage');
-            
-            // Ocultar resultados anteriores
-            memberResultDiv.style.display = 'none';
-            memberMessageDiv.style.display = 'none';
-            
-            // Establecer teléfono
-            document.getElementById('memberPhone').value = phone;
-            
-            // Llenar datos si hay información de potencial
-            if (potentialData) {
-                document.getElementById('memberFirstName').value = potentialData.first_name || '';
-                document.getElementById('memberLastName1').value = potentialData.last_name1 || '';
-                document.getElementById('memberLastName2').value = potentialData.last_name2 || '';
+            if (client.membership_expires) {
+                const expiryDate = new Date(client.membership_expires);
+                document.getElementById('infoExpiryDate').textContent = expiryDate.toLocaleDateString();
             } else {
-                // Limpiar campos
-                document.getElementById('memberFirstName').value = '';
-                document.getElementById('memberLastName1').value = '';
-                document.getElementById('memberLastName2').value = '';
+                document.getElementById('infoExpiryDate').textContent = 'No aplica';
             }
             
-            // Establecer fechas por defecto
-            const today = new Date();
-            const nextMonth = new Date();
-            nextMonth.setMonth(today.getMonth() + 1);
+            // Empleado que captó
+            document.getElementById('infoEmployee').textContent = client.empleado_name || 'No registrado';
             
-            document.getElementById('memberStart').value = today.toISOString().split('T')[0];
-            document.getElementById('memberExpires').value = nextMonth.toISOString().split('T')[0];
+            // Llenar formulario de edición
+            document.getElementById('clientId').value = client.id;
+            document.getElementById('cFirstName').value = client.first_name;
+            document.getElementById('cLastName1').value = client.last_name1;
+            document.getElementById('cLastName2').value = client.last_name2 || '';
+            document.getElementById('cPostalCode').value = client.postal_code || '';
+            document.getElementById('cDob').value = client.dob || '';
+            document.getElementById('cClientType').value = client.client_type;
             
-            // Mostrar formulario
-            addMemberFormDiv.style.display = 'block';
+            if (client.membership_type) {
+                document.getElementById('cMembershipType').value = client.membership_type;
+            }
+            if (client.membership_status) {
+                document.getElementById('cMembershipStatus').value = client.membership_status;
+            }
+            if (client.membership_duration) {
+                document.getElementById('cMembershipDuration').value = client.membership_duration;
+            }
+            if (client.membership_expires) {
+                document.getElementById('cMembershipExpires').value = client.membership_expires;
+            }
+            
+            // Mostrar/ocultar campos de membresía según el tipo de cliente
+            toggleMembershipFields();
         }
         
-        // Manejar envío del formulario de nuevo miembro
-        document.getElementById('newMemberForm').addEventListener('submit', async function(e) {
+        // Obtener texto de duración
+        function getDurationText(duration) {
+            switch(duration) {
+                case 'monthly': return 'Mensual';
+                case 'quarterly': return 'Trimestral';
+                case 'semiannual': return 'Semestral';
+                case 'annual': return 'Anual';
+                default: return duration;
+            }
+        }
+        
+        // Mostrar formulario para agregar/editar cliente
+        function showClientForm() {
+            const phoneDigits = document.getElementById('searchPhone').value.trim();
+            if (!phoneDigits) {
+                alert('Por favor ingresa un número de teléfono primero');
+                return;
+            }
+            
+            document.getElementById('clientPhone').value = phoneDigits;
+            document.getElementById('clientFormSection').style.display = 'block';
+            document.getElementById('clientNotFound').style.display = 'none';
+        }
+        
+        // Alternar visibilidad de campos de membresía
+        function toggleMembershipFields() {
+            const clientType = document.getElementById('cClientType').value;
+            const membershipFields = document.getElementById('membershipFields');
+            const durationField = document.getElementById('durationField');
+            
+            if (clientType === 'member') {
+                membershipFields.style.display = 'grid';
+                durationField.style.display = 'grid';
+                // Hacer requeridos los campos de membresía
+                document.getElementById('cMembershipType').required = true;
+                document.getElementById('cMembershipStatus').required = true;
+                document.getElementById('cMembershipDuration').required = true;
+            } else {
+                membershipFields.style.display = 'none';
+                durationField.style.display = 'none';
+                // Quitar requerido de campos de membresía
+                document.getElementById('cMembershipType').required = false;
+                document.getElementById('cMembershipStatus').required = false;
+                document.getElementById('cMembershipDuration').required = false;
+            }
+        }
+        
+        // Actualizar cliente existente
+        document.getElementById('updateClientForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const memberData = {
-                phone: document.getElementById('memberPhone').value,
-                first_name: document.getElementById('memberFirstName').value,
-                last_name1: document.getElementById('memberLastName1').value,
-                last_name2: document.getElementById('memberLastName2').value,
-                postal_code: document.getElementById('memberPostalCode').value,
-                dob: document.getElementById('memberDOB').value,
-                membership_type: document.getElementById('memberType').value,
-                membership_status: document.getElementById('memberStatus').value,
-                membership_starts: document.getElementById('memberStart').value,
-                membership_expires: document.getElementById('memberExpires').value,
+            if (!supabase) {
+                alert('Error: No hay conexión con la base de datos.');
+                return;
+            }
+            
+            const clientId = document.getElementById('clientId').value;
+            const phoneDigits = document.getElementById('clientPhone').value;
+            const firstName = document.getElementById('cFirstName').value;
+            const lastName1 = document.getElementById('cLastName1').value;
+            const lastName2 = document.getElementById('cLastName2').value;
+            const postalCode = document.getElementById('cPostalCode').value;
+            const dob = document.getElementById('cDob').value;
+            const clientType = document.getElementById('cClientType').value;
+            const membershipType = document.getElementById('cMembershipType').value;
+            const membershipStatus = document.getElementById('cMembershipStatus').value;
+            const membershipDuration = document.getElementById('cMembershipDuration').value;
+            const membershipExpires = document.getElementById('cMembershipExpires').value;
+            
+            // Formatear número de teléfono completo
+            const fullPhone = formatFullPhone(phoneDigits);
+            
+            const updateData = {
+                phone: fullPhone,
+                first_name: firstName,
+                last_name1: lastName1,
+                last_name2: lastName2,
+                postal_code: postalCode,
+                dob: dob,
+                client_type: clientType,
+                updated_at: new Date().toISOString()
+            };
+            
+            // Solo agregar campos de membresía si es miembro
+            if (clientType === 'member') {
+                updateData.membership_type = membershipType;
+                updateData.membership_status = membershipStatus;
+                updateData.membership_duration = membershipDuration;
+                updateData.membership_expires = membershipExpires;
+                
+                // Si se está convirtiendo de potencial a miembro, establecer fecha de inicio
+                if (!document.getElementById('clientId').value) {
+                    updateData.membership_starts = new Date().toISOString();
+                }
+            }
+            
+            try {
+                let result;
+                if (clientId) {
+                    // Actualizar cliente existente
+                    result = await supabase
+                        .from('clients')
+                        .update(updateData)
+                        .eq('id', clientId);
+                } else {
+                    // Insertar nuevo cliente - SOLO guardamos el ID del empleado
+                    updateData.empleado_id = currentEmployee.id;
+                    updateData.created_at = new Date().toISOString();
+                    
+                    result = await supabase
+                        .from('clients')
+                        .insert([updateData]);
+                }
+                
+                if (result.error) {
+                    console.error('Error al guardar cliente:', result.error);
+                    alert('Error al guardar cliente: ' + result.error.message);
+                    return;
+                }
+                
+                // Mostrar mensaje de éxito
+                document.getElementById('clientFormSection').style.display = 'none';
+                document.getElementById('clientSuccess').style.display = 'block';
+                
+                // Recargar estadísticas
+                await loadStatistics();
+            } catch (error) {
+                console.error('Error al guardar cliente:', error);
+                alert('Error al guardar cliente: ' + error.message);
+            }
+        });
+        
+        // Reiniciar formulario de cliente
+        function resetClientForm() {
+            document.getElementById('updateClientForm').reset();
+            document.getElementById('clientSuccess').style.display = 'none';
+            document.getElementById('clientFormSection').style.display = 'none';
+            document.getElementById('clientInfo').style.display = 'none';
+            document.getElementById('clientNotFound').style.display = 'none';
+            document.getElementById('searchPhone').value = '';
+        }
+        
+        // Manejar el envío del formulario de captación
+        document.getElementById('clientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!currentEmployee) {
+                alert('Debes iniciar sesión para enviar el formulario');
+                return;
+            }
+            
+            // Verificar conexión con Evolution API
+            const isConnected = await checkEvolutionConnection();
+            if (!isConnected) {
+                alert('Error: No hay conexión con Evolution API. Verifica que tu instancia de WhatsApp esté conectada.');
+                return;
+            }
+            
+            // Obtener valores del formulario
+            const phoneDigits = document.getElementById('phone').value.trim();
+            
+            // Verificar que el teléfono tenga 10 dígitos
+            if (phoneDigits.length !== 10) {
+                alert('El número de teléfono debe tener exactamente 10 dígitos');
+                return;
+            }
+            
+            // Formatear número completo
+            const fullPhone = formatFullPhone(phoneDigits);
+            
+            const clientData = {
+                first_name: document.getElementById('firstName').value,
+                last_name1: document.getElementById('lastName1').value,
+                last_name2: document.getElementById('lastName2').value,
+                phone: fullPhone,
+                gender: document.getElementById('gender').value,
+                source: document.getElementById('source').value,
+                observations: document.getElementById('observations').value,
+                client_type: 'potential',
+                // SOLO guardamos el ID del empleado, no el nombre
+                empleado_id: currentEmployee.id,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             };
             
+            // Mostrar spinner de carga
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('sendWhatsAppBtn').disabled = true;
+            
             try {
-                // Insertar nuevo miembro
+                // Guardar en Supabase (en la tabla clients)
                 const { data, error } = await supabase
-                    .from('members')
-                    .insert([memberData]);
+                    .from('clients')
+                    .insert([clientData]);
                 
                 if (error) {
-                    console.error('Error al registrar miembro:', error);
-                    showMessage('Error al registrar miembro: ' + error.message, 'error');
+                    console.error('Error al guardar cliente:', error);
+                    alert('Error al guardar los datos: ' + error.message);
                     return;
                 }
                 
-                showMessage('Miembro registrado exitosamente', 'success');
+                // Preparar número de teléfono para Evolution API (usar el formato completo)
+                const phoneNumber = fullPhone;
                 
-                // Limpiar formulario
-                document.getElementById('newMemberForm').reset();
-                document.getElementById('addMemberForm').style.display = 'none';
+                // Enviar secuencia de mensajes de bienvenida
+                const result = await sendWelcomeSequence(phoneNumber, clientData.first_name);
                 
-                // Mostrar información del nuevo miembro
-                displayMemberInfo(memberData);
+                if (result.success) {
+                    // Mostrar mensaje de éxito
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('clientForm').style.display = 'none';
+                    
+                    // Recargar estadísticas
+                    await loadStatistics();
+                } else {
+                    alert('Error al enviar mensajes de WhatsApp: ' + result.message);
+                }
                 
             } catch (error) {
                 console.error('Error:', error);
-                showMessage('Error al procesar la solicitud', 'error');
+                alert('Error al procesar la solicitud: ' + error.message);
+            } finally {
+                // Ocultar spinner de carga
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('sendWhatsAppBtn').disabled = false;
             }
         });
         
-        // Mostrar mensajes
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('memberMessage');
-            messageDiv.innerHTML = `
-                <div class="alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'}">
-                    ${message}
-                </div>
-            `;
-            messageDiv.style.display = 'block';
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
             
-            // Ocultar mensaje después de 5 segundos
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
+            // Inicializar pestañas de Bootstrap
+            const triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'));
+            triggerTabList.forEach(function(triggerEl) {
+                new bootstrap.Tab(triggerEl);
+            });
+            
+            // Escuchar cambios en el tipo de cliente
+            document.getElementById('cClientType').addEventListener('change', toggleMembershipFields);
+            
+            // Escuchar cambios en la duración de membresía
+            document.getElementById('cMembershipDuration').addEventListener('change', function() {
+                const duration = this.value;
+                if (duration) {
+                    const expiryDate = calculateExpiryDate(duration);
+                    document.getElementById('cMembershipExpires').value = expiryDate;
+                }
+            });
+        });
+        
+        // Funciones adicionales para el formulario de captación
+        const formFields = document.querySelectorAll('#clientForm input, #clientForm select');
+        formFields.forEach(field => {
+            field.addEventListener('input', checkFormCompletion);
+        });
+        
+        function checkFormCompletion() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName1 = document.getElementById('lastName1').value;
+            const phone = document.getElementById('phone').value;
+            const gender = document.getElementById('gender').value;
+            const source = document.getElementById('source').value;
+            
+            if (firstName && lastName1 && phone && gender && source) {
+                document.getElementById('whatsappPreview').style.display = 'block';
+                document.getElementById('previewName').textContent = firstName;
+            } else {
+                document.getElementById('whatsappPreview').style.display = 'none';
+            }
         }
         
-        // Función para editar miembro (placeholder)
-        function editMember(memberId) {
-            alert('Funcionalidad de edición en desarrollo para el miembro ID: ' + memberId);
+        // Función para resetear el formulario
+        function resetForm() {
+            document.getElementById('clientForm').reset();
+            document.getElementById('whatsappPreview').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('clientForm').style.display = 'block';
         }
         
-        // Función para renovar membresía (placeholder)
-        function renewMember(memberId) {
-            alert('Funcionalidad de renovación en desarrollo para el miembro ID: ' + memberId);
-        }
+        // Validación del número de teléfono (solo números)
+        document.getElementById('phone').addEventListener('input', function(e) {
+            // Permitir sólo números
+            e.target.value = e.target.value.replace(/\D/g, '');
+            
+            // Limitar a 10 dígitos
+            if (e.target.value.length > 10) {
+                e.target.value = e.target.value.slice(0, 10);
+            }
+        });
         
-        // Cargar estadísticas (función existente)
-        async function loadStatistics() {
-            // Tu código existente para cargar estadísticas
-        }
+        // Validación del número de teléfono en búsqueda (solo números)
+        document.getElementById('searchPhone').addEventListener('input', function(e) {
+            // Permitir sólo números
+            e.target.value = e.target.value.replace(/\D/g, '');
+            
+            // Limitar a 10 dígitos
+            if (e.target.value.length > 10) {
+                e.target.value = e.target.value.slice(0, 10);
+            }
+        });
         
-        // Verificar autenticación al cargar la página
-        checkAuth();
-
-        // Resto de tu código existente para las otras pestañas...
+        // Formatear nombre con primera letra mayúscula
+        document.getElementById('firstName').addEventListener('blur', function(e) {
+            if (e.target.value) {
+                e.target.value = e.target.value.split(' ').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
+            }
+        });
+        
+        document.getElementById('lastName1').addEventListener('blur', function(e) {
+            if (e.target.value) {
+                e.target.value = e.target.value.split(' ').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
+            }
+        });
+        
+        document.getElementById('lastName2').addEventListener('blur', function(e) {
+            if (e.target.value) {
+                e.target.value = e.target.value.split(' ').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
+            }
+        });
     </script>
 </body>
 </html>
